@@ -1,0 +1,112 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover,user-scalable=no">
+<meta name="theme-color" content="#111827">
+<title>ConectaMente — Protótipo Inclusivo</title>
+<style>
+:root{--bg:#0b1020;--panel:#151d33;--panel2:#1d2945;--text:#f7f9fc;--muted:#b9c3d8;--accent:#7dd3fc;--good:#86efac;--bad:#fca5a5;--focus:#fbbf24}
+*{box-sizing:border-box}html,body{margin:0;min-height:100%;font-family:system-ui,-apple-system,Segoe UI,sans-serif;background:var(--bg);color:var(--text)}
+body{padding:max(14px,env(safe-area-inset-top)) 14px max(20px,env(safe-area-inset-bottom));}
+button{font:inherit;color:var(--text);background:var(--panel2);border:2px solid transparent;border-radius:18px;padding:15px 18px;min-height:54px;cursor:pointer;touch-action:manipulation}
+button:focus-visible{outline:4px solid var(--focus);outline-offset:3px}.primary{background:#164e63;border-color:#38bdf8;font-weight:800}.secondary{background:var(--panel)}
+.app{max-width:720px;margin:auto}.top{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-bottom:14px}
+.logo{font-size:1.25rem;font-weight:900}.badge{font-size:.78rem;color:#07111e;background:var(--accent);padding:6px 10px;border-radius:999px;font-weight:800}
+.card{background:var(--panel);border:1px solid #2b3958;border-radius:26px;padding:20px;box-shadow:0 14px 35px #0005;margin-bottom:14px}
+h1{font-size:clamp(1.8rem,7vw,3rem);line-height:1.05;margin:.2rem 0 .7rem}h2{margin:.2rem 0 .6rem}p{color:var(--muted);line-height:1.5}
+.actions{display:grid;gap:10px}.grid{display:grid;grid-template-columns:repeat(2,1fr);gap:12px}.small{font-size:.88rem;color:var(--muted)}
+.hidden{display:none!important}.progress{height:10px;background:#26334f;border-radius:99px;overflow:hidden}.bar{height:100%;width:0;background:var(--accent);transition:width .3s}
+.option{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:14px 0;border-bottom:1px solid #2b3958}.option:last-child{border-bottom:0}
+.switch{position:relative;width:58px;height:34px;flex:none}.switch input{opacity:0;width:0;height:0}.slider{position:absolute;inset:0;background:#37445e;border-radius:99px}.slider:before{content:"";position:absolute;width:26px;height:26px;left:4px;top:4px;background:white;border-radius:50%;transition:.2s}.switch input:checked+.slider{background:#0e7490}.switch input:checked+.slider:before{transform:translateX(24px)}
+.sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0,0,0,0)}
+.play-area{min-height:330px;display:grid;place-items:center;background:#10182b;border-radius:22px;padding:18px;margin:14px 0}
+.shape-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;width:min(520px,100%)}.shape{aspect-ratio:1;border-radius:22px;border:3px solid #4b5c7d;display:grid;place-items:center;font-size:clamp(2rem,10vw,4rem);background:#202d49}
+.shape:nth-child(2n){border-radius:50%}.shape:nth-child(3n){transform:rotate(45deg)}.shape:nth-child(3n)>span{transform:rotate(-45deg)}
+.target{font-size:1.1rem;text-align:center;background:#0f2740;border-radius:18px;padding:14px;margin-bottom:12px}.feedback{min-height:30px;text-align:center;font-weight:800}.good{color:var(--good)}.bad{color:var(--bad)}
+.sequence{display:flex;gap:10px;flex-wrap:wrap;justify-content:center}.seq-item{width:64px;height:64px;border-radius:18px;display:grid;place-items:center;font-size:1.8rem;border:2px solid #526586}
+.big-controls{display:grid;grid-template-columns:repeat(2,1fr);gap:12px;max-width:420px;width:100%}
+.stat{display:flex;justify-content:space-between;padding:10px 0;border-bottom:1px solid #2b3958}.stat:last-child{border:0}
+body.large{font-size:1.18rem}body.large button{min-height:64px}body.large .shape{font-size:clamp(2.5rem,13vw,5rem)}
+body.highcontrast{--bg:#000;--panel:#000;--panel2:#111;--text:#fff;--muted:#fff;--accent:#00ffff;--focus:#ffff00}.highcontrast .card{border-color:#fff}.highcontrast button{border-color:#fff}
+body.reduce-motion *{transition:none!important;animation:none!important}
+</style>
+</head>
+<body>
+<main class="app" aria-live="polite">
+<div class="top"><div class="logo">🧠 ConectaMente</div><div class="badge">PROTÓTIPO TDE</div></div>
+
+<section id="home" class="card">
+<h1>Jogar é perceber.</h1>
+<p>Um jogo criado para explorar <strong>sensação, percepção, atenção e memória</strong> com diferentes formas de interação.</p>
+<div class="actions">
+<button class="primary" onclick="show('access')">♿ Configurar acessibilidade</button>
+<button onclick="startGame()">▶ Começar</button>
+</div>
+<p class="small">A proposta é adaptar a experiência ao jogador, e não exigir que o jogador se adapte ao jogo.</p>
+</section>
+
+<section id="access" class="card hidden">
+<h2>Como você prefere jogar?</h2>
+<p>Essas opções podem ser combinadas. Nenhuma é obrigatória.</p>
+<div class="option"><div><b>🔊 Áudio e leitura</b><br><span class="small">Narra instruções e resultados.</span></div><label class="switch"><input id="audio" type="checkbox" checked><span class="slider"></span></label></div>
+<div class="option"><div><b>📳 Vibração</b><br><span class="small">Usa vibração quando disponível.</span></div><label class="switch"><input id="vibrate" type="checkbox" checked><span class="slider"></span></label></div>
+<div class="option"><div><b>🔎 Interface ampliada</b><br><span class="small">Botões e elementos maiores.</span></div><label class="switch"><input id="large" type="checkbox"><span class="slider"></span></label></div>
+<div class="option"><div><b>◐ Alto contraste</b><br><span class="small">Aumenta a diferenciação visual.</span></div><label class="switch"><input id="contrast" type="checkbox"><span class="slider"></span></label></div>
+<div class="option"><div><b>🌿 Menos movimento</b><br><span class="small">Reduz transições e animações.</span></div><label class="switch"><input id="motion" type="checkbox"><span class="slider"></span></label></div>
+<div class="actions" style="margin-top:16px"><button class="primary" onclick="saveAccess()">✓ Salvar preferências</button><button onclick="show('home')">Voltar</button></div>
+</section>
+
+<section id="game" class="card hidden">
+<div style="display:flex;justify-content:space-between;gap:12px;align-items:center"><div><b id="stageName">Fase</b><div class="small" id="stageFunction">Função psicológica</div></div><div><b id="score">0</b> pts</div></div>
+<div class="progress" aria-label="Progresso"><div class="bar" id="bar"></div></div>
+<div id="gameContent"></div>
+</section>
+
+<section id="result" class="card hidden">
+<h1>Você conectou os processos.</h1>
+<p>O protótipo trabalhou quatro funções psicológicas por meio de desafios diferentes.</p>
+<div class="stat"><span>Sensação</span><b>✓</b></div><div class="stat"><span>Percepção</span><b>✓</b></div><div class="stat"><span>Atenção</span><b>✓</b></div><div class="stat"><span>Memória</span><b>✓</b></div>
+<div class="actions" style="margin-top:16px"><button class="primary" onclick="startGame()">↻ Jogar novamente</button><button onclick="show('home')">Início</button></div>
+</section>
+</main>
+
+<script>
+const $=id=>document.getElementById(id);
+let access={audio:true,vibrate:true,large:false,contrast:false,motion:false},score=0,stage=0,seq=[],seqPos=0;
+const stages=[
+ {name:"01 · SENSO",fn:"Sensação",type:"sensation"},
+ {name:"02 · ENXERGUE O DIFERENTE",fn:"Percepção",type:"perception"},
+ {name:"03 · FOCO",fn:"Atenção",type:"attention"},
+ {name:"04 · LEMBRE",fn:"Memória",type:"memory"}
+];
+function show(id){["home","access","game","result"].forEach(x=>$(x).classList.toggle("hidden",x!==id)); if(id==="access") apply();}
+function apply(){document.body.classList.toggle("large",access.large);document.body.classList.toggle("highcontrast",access.contrast);document.body.classList.toggle("reduce-motion",access.motion)}
+function saveAccess(){access={audio:$("audio").checked,vibrate:$("vibrate").checked,large:$("large").checked,contrast:$("contrast").checked,motion:$("motion").checked};apply();speak("Preferências salvas. Vamos jogar.");show("home")}
+function speak(t){if(access.audio && "speechSynthesis"in window){speechSynthesis.cancel();speechSynthesis.speak(new SpeechSynthesisUtterance(t))}}
+function buzz(pattern=40){if(access.vibrate&&navigator.vibrate)navigator.vibrate(pattern)}
+function startGame(){score=0;stage=0;show("game");renderStage()}
+function renderStage(){let s=stages[stage];$("stageName").textContent=s.name;$("stageFunction").textContent=s.fn;$("score").textContent=score;$("bar").style.width=(stage/4*100)+"%";let c=$("gameContent");c.innerHTML="";
+ if(s.type==="sensation")sensation(c); if(s.type==="perception")perception(c); if(s.type==="attention")attention(c); if(s.type==="memory")memory(c);
+ speak(stage===0?"Fase um. Sensação. Observe, toque ou use os estímulos disponíveis.":stage===1?"Fase dois. Percepção. Encontre o símbolo diferente.":stage===2?"Fase três. Atenção. Toque somente nos alvos.": "Fase quatro. Memória. Memorize a sequência.");
+}
+function next(){stage++;if(stage>=stages.length){$("bar").style.width="100%";show("result");speak("Parabéns. Você concluiu o protótipo.");return}renderStage()}
+function sensation(c){
+c.innerHTML=`<div class="target"><b>Escolha o estímulo indicado:</b><br>Toque no círculo <strong>OU</strong> use o botão sonoro.</div><div class="play-area"><div class="big-controls"><button class="shape" style="transform:none" onclick="answerSensation('circle')">●<span class="sr">Círculo</span></button><button class="shape" style="transform:none" onclick="answerSensation('square')">■<span class="sr">Quadrado</span></button><button class="shape" style="transform:none" onclick="answerSensation('triangle')">▲<span class="sr">Triângulo</span></button><button onclick="speak('O alvo é o círculo');buzz(80)">🔊 Ouvir alvo</button></div></div><div id="fb" class="feedback" role="status"></div>`;
+}
+function answerSensation(x){let ok=x==="circle";feedback(ok);if(ok){score+=10;setTimeout(next,650)}}
+function perception(c){
+let diff=Math.floor(Math.random()*9);let cells=Array.from({length:9},(_,i)=>i===diff?'<span>◆</span>':'<span>●</span>');c.innerHTML=`<div class="target">Encontre o <strong>símbolo diferente</strong>. Ele não depende de cor.</div><div class="play-area"><div class="shape-grid">${cells.map((x,i)=>`<button class="shape" style="transform:none" aria-label="posição ${i+1}" onclick="answerPerception(${i},${diff})">${x}</button>`).join("")}</div></div><div id="fb" class="feedback" role="status"></div>`}
+function answerPerception(i,d){let ok=i===d;feedback(ok);if(ok){score+=10;setTimeout(next,650)}}
+function attention(c){
+let target=Math.floor(Math.random()*8);let cells=Array.from({length:8},(_,i)=>i===target?"★":"○");c.innerHTML=`<div class="target">Toque <strong>somente na estrela ★</strong>. Ignore os círculos.</div><div class="play-area"><div class="shape-grid">${cells.map((x,i)=>`<button class="shape" style="transform:none" onclick="answerAttention(${i},${target})">${x}</button>`).join("")}</div></div><div id="fb" class="feedback" role="status"></div>`}
+function answerAttention(i,t){let ok=i===t;feedback(ok);if(ok){score+=10;setTimeout(next,650)}}
+function memory(c){
+seq=Array.from({length:4},()=>["●","■","▲","◆"][Math.floor(Math.random()*4)]);seqPos=0;c.innerHTML=`<div class="target">Memorize a sequência. Depois, repita na mesma ordem.</div><div class="play-area"><div><div class="sequence" id="sequence">${seq.map(x=>`<div class="seq-item">${x}</div>`).join("")}</div><div style="text-align:center;margin-top:18px"><button class="primary" onclick="hideSequence()">✓ Memorizei</button></div></div></div><div id="fb" class="feedback" role="status"></div>`}
+function hideSequence(){let area=$("sequence");area.innerHTML="<div class='seq-item'>?</div>".repeat(4);let controls=document.createElement("div");controls.className="big-controls";["●","■","▲","◆"].forEach(x=>{let b=document.createElement("button");b.textContent=x;b.setAttribute("aria-label","Símbolo "+x);b.onclick=()=>memoryTap(x);controls.appendChild(b)});area.parentElement.appendChild(controls);speak("Repita a sequência.");}
+function memoryTap(x){let ok=x===seq[seqPos];if(!ok){feedback(false);seqPos=0;setTimeout(()=>speak("Tente novamente. A sequência recomeçou."),100);return}seqPos++;buzz(30);if(seqPos===seq.length){score+=10;feedback(true);setTimeout(next,800)}}
+function feedback(ok){let f=$("fb");if(!f)return;f.textContent=ok?"✓ Acertou!":"✕ Não foi dessa vez. Tente novamente.";f.className="feedback "+(ok?"good":"bad");buzz(ok?50:[100,60,100]);speak(ok?"Acertou!":"Tente novamente.");$("score").textContent=score}
+apply();
+</script>
+</body>
+</html>
